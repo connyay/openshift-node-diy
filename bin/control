@@ -34,7 +34,7 @@ function start() {
         cd ${OPENSHIFT_REPO_DIR}
         client_message "Starting node using npm start"
         nohup npm start >> $logf 2>&1 &
-        echo $! > ${OPENSHIFT_NODEDIY_DIR}/server.pid
+        echo "$! `pregp node`" > ${OPENSHIFT_NODEDIY_DIR}/server.pid
     else
         client_message "npm start requires a package.json file, and we could not find one."
     fi
