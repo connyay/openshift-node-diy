@@ -35,6 +35,7 @@ function start() {
         client_message "Starting node using npm start"
         nohup npm start >> $logf 2>&1 &
         npm_pid=$!;
+        sleep 3
         node_pid=$(pgrep -P $npm_pid)
         echo "$npm_pid $node_pid" > ${OPENSHIFT_NODEDIY_DIR}/server.pid
     else
