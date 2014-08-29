@@ -1,7 +1,10 @@
 #!/bin/bash
 
 function is_node_running {
-    if [ -f ${OPENSHIFT_DATA_DIR}/maintenance.pid ]; then
+    if [ -f ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid ]; then
+        exit 0
+    fi
+    if [ -f ${OPENSHIFT_NODEDIY_DIR}/server.pid ]; then
         exit 0
     fi
     ps axco command | grep -w '^node$' > /dev/null
@@ -23,28 +26,32 @@ function status() {
 
 function start() {
     echo "Stopping maintenance web server."
-    kill -9 `cat ${OPENSHIFT_DATA_DIR}/maintenance.pid`
-    rm ${OPENSHIFT_DATA_DIR}/maintenance.pid
+    kill -9 `cat ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid`
+    rm -f ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid
 
     logf="$OPENSHIFT_NODEJS_LOG_DIR/node.log"
     if [ -f "${OPENSHIFT_REPO_DIR}package.json" ]; then
         cd ${OPENSHIFT_REPO_DIR}
         client_message "Starting node using npm start"
-        npm start >> $logf 2>&1 &
+        nohup npm start >> $logf 2>&1 &
+        echo $! > ${OPENSHIFT_NODEDIY_DIR}/server.pid
+    else
+        client_message "npm start requires a package.json file, and we could not find one."
     fi
 }
 
 function stop() {
     if [ is_node_running ]; then
       client_message "Stopping node"
-      killall node
+      kill -9 `cat ${OPENSHIFT_NODEDIY_DIR}/server.pid`
+      rm -f ${OPENSHIFT_NODEDIY_DIR}/server.pid
     else
       client_message "Could not stop node... Is it running?"
     fi
 
     client_message "Starting maintenance web server."
     nohup node ${OPENSHIFT_NODEDIY_DIR}/maintenance/maintenance.js > /tmp/nohup.out 2>&1&
-    echo $! > ${OPENSHIFT_DATA_DIR}/maintenance.pid
+    echo $! > ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid
     exit 0
 }
 
