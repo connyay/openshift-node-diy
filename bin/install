@@ -3,3 +3,5 @@
 source "${OPENSHIFT_NODEDIY_DIR}lib/util"
 
 install
+
+echo 'export PATH=`gem environment gemdir`/bin:$PATH' >> ~/.bash_profile
