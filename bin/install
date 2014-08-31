@@ -5,4 +5,4 @@ source "${OPENSHIFT_NODEDIY_DIR}lib/util"
 install
 
 gem_path=$(gem environment gemdir)
-echo "export PATH=${gem_path}/bin:$PATH" >> "${OPENSHIFT_DATA_DIR}.bash_profile"
+ln -s "${gem_path}/bin" "${OPENSHIFT_NODEDIY_DIR}bin/gems/bin"
