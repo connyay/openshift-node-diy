@@ -52,6 +52,11 @@ function stop() {
       client_message "Could not stop node... Is it running?"
     fi
 
+    # Force kill if exists
+    killall node > /dev/null 2>&1
+    sleep 2
+    killall -9 node > /dev/null 2>&1
+
     #client_message "Starting maintenance web server."
     #nohup node ${OPENSHIFT_NODEDIY_DIR}/maintenance/maintenance.js > /tmp/nohup.out 2>&1&
     #echo $! > ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid
