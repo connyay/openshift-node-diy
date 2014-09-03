@@ -2,10 +2,10 @@
 
 function is_node_running {
     if [ -f ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid ]; then
-        exit 0
+        return 0
     fi
     if [ -f ${OPENSHIFT_NODEDIY_DIR}/server.pid ]; then
-        exit 0
+        return 0
     fi
     ps axco command | grep -w '^node$' > /dev/null
 }
