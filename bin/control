@@ -1,9 +1,9 @@
 #!/bin/bash
 
 function is_node_running {
-    if [ -f ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid ]; then
-        return 0
-    fi
+    #if [ -f ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid ]; then
+    #    return 0
+    #fi
     if [ -f ${OPENSHIFT_NODEDIY_DIR}/server.pid ]; then
         return 0
     fi
@@ -25,9 +25,9 @@ function status() {
 }
 
 function start() {
-    echo "Stopping maintenance web server."
-    kill -9 `cat ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid`
-    rm -f ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid
+    #echo "Stopping maintenance web server."
+    #kill -9 `cat ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid`
+    #rm -f ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid
 
     logf="$OPENSHIFT_NODEJS_LOG_DIR/node.log"
     if [ -f "${OPENSHIFT_REPO_DIR}package.json" ]; then
@@ -52,9 +52,9 @@ function stop() {
       client_message "Could not stop node... Is it running?"
     fi
 
-    client_message "Starting maintenance web server."
-    nohup node ${OPENSHIFT_NODEDIY_DIR}/maintenance/maintenance.js > /tmp/nohup.out 2>&1&
-    echo $! > ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid
+    #client_message "Starting maintenance web server."
+    #nohup node ${OPENSHIFT_NODEDIY_DIR}/maintenance/maintenance.js > /tmp/nohup.out 2>&1&
+    #echo $! > ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid
 }
 
 function restart() {
