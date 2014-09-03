@@ -19,7 +19,12 @@ fs.readFile(__dirname + '/503.html', function (err, data) {
 });
 
 http.createServer(function(request, response) {
-    response.writeHeader(200, {'Content-Type': 'text/html'});
+    response.writeHeader(503, {
+        'Content-Type': 'text/html',
+        'Pragma': 'no-cache',
+        'Expires': '-1',
+        'Cache-Control': 'no-store, no-cache, must-revalidate'
+    });
     response.write(index);
     response.end();
 }).listen(port, ip);

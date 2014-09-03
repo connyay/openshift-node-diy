@@ -2,7 +2,7 @@ Name: node-diy
 Cartridge-Short-Name: NODEDIY
 Display-Name: Node DIY
 Description: "Node.js cartridge that lets you take the wheel"
-Version: '0.1'
+Version: '0.2'
 Source-Url: https://github.com/connyay/openshift-node-diy.git
 License: "Apache v2"
 License-Url: https://github.com/connyay/openshift-node-diy/blob/master/LICENSE
