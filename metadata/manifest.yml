@@ -7,7 +7,7 @@ Source-Url: https://github.com/connyay/openshift-node-diy.git
 License: "Apache v2"
 License-Url: https://github.com/connyay/openshift-node-diy/blob/master/LICENSE
 Cartridge-Version: 0.3
-Compatible-Versions: ['0.1', '0.2', '0.3']
+Compatible-Versions: ['0.0.1', '0.1', '0.2', '0.3']
 Cartridge-Vendor: connyay
 Vendor: connyay
 Categories:
