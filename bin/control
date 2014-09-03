@@ -46,8 +46,10 @@ function start() {
 function stop() {
     if [ is_node_running ]; then
       client_message "Stopping node"
-      kill -9 `cat ${OPENSHIFT_NODEDIY_DIR}/server.pid`
-      rm -f ${OPENSHIFT_NODEDIY_DIR}/server.pid
+      if [ -f "${OPENSHIFT_REPO_DIR}package.json" ]; then
+          kill -9 `cat ${OPENSHIFT_NODEDIY_DIR}/server.pid` > /dev/null 2>&1
+          rm -f ${OPENSHIFT_NODEDIY_DIR}/server.pid
+      fi
     else
       client_message "Could not stop node... Is it running?"
     fi
