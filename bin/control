@@ -11,6 +11,7 @@ function is_node_running {
 }
 
 function pidlist() {
+    # Recursive function to find pids children and grand children
     local thispid=$1
     local allpids=
     local childpids=
@@ -67,7 +68,8 @@ function stop() {
       client_message "Could not stop node... Is it running?"
     fi
 
-    if ![env | grep --quiet HAPROXY]; then
+    if [ `env | grep --quiet HAPROXY` ]; then
+        # Did not find HAPROXY in env vars, using maintence server
         client_message "Starting maintenance web server."
         nohup node ${OPENSHIFT_NODEDIY_DIR}maintenance/maintenance.js > /tmp/nohup.out 2>&1&
         echo $! > ${OPENSHIFT_NODEDIY_DIR}maintenance.pid
@@ -77,6 +79,8 @@ function stop() {
 
 function restart() {
     stop
+    # Give node two seconds to stop
+    sleep 2
     start
 }
 
