@@ -1,13 +1,25 @@
 #!/bin/bash
 
 function is_node_running {
-    #if [ -f ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid ]; then
-    #    return 0
-    #fi
-    if [ -f ${OPENSHIFT_NODEDIY_DIR}/server.pid ]; then
+    if [ -f ${OPENSHIFT_NODEDIY_DIR}maintenance.pid ]; then
+        return 0
+    fi
+    if [ -f ${OPENSHIFT_NODEDIY_DIR}server.pid ]; then
         return 0
     fi
     ps axco command | grep -w '^node$' > /dev/null
+}
+
+function pidlist() {
+    local thispid=$1
+    local allpids=
+    local childpids=
+    childpids=$(ps --ppid $thispid -o pid h)
+    for pid in $childpids
+    do
+      allpids="$(pidlist $pid) $allpids"
+    done
+    echo "$thispid $allpids"
 }
 
 function status() {
@@ -25,19 +37,20 @@ function status() {
 }
 
 function start() {
-    #echo "Stopping maintenance web server."
-    #kill -9 `cat ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid`
-    #rm -f ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid
+    if [ -f ${OPENSHIFT_NODEDIY_DIR}maintenance.pid ]; then
+        echo "Stopping maintenance web server."
+        kill -9 `cat ${OPENSHIFT_NODEDIY_DIR}maintenance.pid`
+        rm -f ${OPENSHIFT_NODEDIY_DIR}maintenance.pid
+    fi
 
-    logf="$OPENSHIFT_NODEJS_LOG_DIR/node.log"
+    logf="${OPENSHIFT_NODEJS_LOG_DIR}node.log"
     if [ -f "${OPENSHIFT_REPO_DIR}package.json" ]; then
         cd ${OPENSHIFT_REPO_DIR}
         client_message "Starting node using npm start"
         nohup npm start >> $logf 2>&1 &
         npm_pid=$!;
         sleep 3
-        node_pid=$(pgrep -P $npm_pid)
-        echo "$npm_pid $node_pid" > ${OPENSHIFT_NODEDIY_DIR}/server.pid
+        echo `pidlist $npm_pid` > ${OPENSHIFT_NODEDIY_DIR}server.pid
     else
         client_message "npm start requires a package.json file, and we could not find one."
     fi
@@ -46,22 +59,20 @@ function start() {
 function stop() {
     if [ is_node_running ]; then
       client_message "Stopping node"
-      if [ -f "${OPENSHIFT_NODEDIY_DIR}/server.pid" ]; then
-          kill -9 `cat ${OPENSHIFT_NODEDIY_DIR}/server.pid` > /dev/null 2>&1
-          rm -f ${OPENSHIFT_NODEDIY_DIR}/server.pid
+      if [ -f "${OPENSHIFT_NODEDIY_DIR}server.pid" ]; then
+          kill -9 `cat ${OPENSHIFT_NODEDIY_DIR}server.pid` > /dev/null 2>&1
+          rm -f ${OPENSHIFT_NODEDIY_DIR}server.pid
       fi
     else
       client_message "Could not stop node... Is it running?"
     fi
 
-    # Force kill if exists
-    killall node > /dev/null 2>&1
-    sleep 2
-    killall -9 node > /dev/null 2>&1
+    if ![env | grep --quiet HAPROXY]; then
+        client_message "Starting maintenance web server."
+        nohup node ${OPENSHIFT_NODEDIY_DIR}maintenance/maintenance.js > /tmp/nohup.out 2>&1&
+        echo $! > ${OPENSHIFT_NODEDIY_DIR}maintenance.pid
+    fi
     true
-    #client_message "Starting maintenance web server."
-    #nohup node ${OPENSHIFT_NODEDIY_DIR}/maintenance/maintenance.js > /tmp/nohup.out 2>&1&
-    #echo $! > ${OPENSHIFT_NODEDIY_DIR}/maintenance.pid
 }
 
 function restart() {
@@ -80,7 +91,7 @@ function reload() {
 function tidy() {
   client_message "Emptying log dir: $OPENSHIFT_NODEJS_LOG_DIR"
   shopt -s dotglob
-  rm -rf $OPENSHIFT_NODEJS_LOG_DIR/*
+  rm -rf ${OPENSHIFT_NODEJS_LOG_DIR}*
   rm -rf ${OPENSHIFT_NODEJS_DIR}tmp/*
 }
 
