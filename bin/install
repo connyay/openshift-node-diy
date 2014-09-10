@@ -4,7 +4,5 @@ source "${OPENSHIFT_NODEDIY_DIR}lib/util"
 
 install
 
-yum install -y libffi-devel
-
 gem_path=$(gem environment gemdir)
 ln -s "${gem_path}/bin" "${OPENSHIFT_NODEDIY_DIR}bin/gems/bin"
