@@ -45,6 +45,7 @@ function start() {
     fi
 
     logf="${OPENSHIFT_NODEJS_LOG_DIR}node.log"
+    touch $logf
     if [ -f "${OPENSHIFT_REPO_DIR}package.json" ]; then
         cd ${OPENSHIFT_REPO_DIR}
         client_message "Starting node using npm start"
@@ -97,6 +98,7 @@ function tidy() {
   shopt -s dotglob
   rm -rf ${OPENSHIFT_NODEJS_LOG_DIR}*
   rm -rf ${OPENSHIFT_NODEJS_DIR}tmp/*
+  touch ${OPENSHIFT_NODEJS_LOG_DIR}node.log
 }
 
 #
