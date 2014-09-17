@@ -19,7 +19,7 @@ done
 
 if [[ $repo && $tag ]]; then
     # Clean out directory
-    find . ! -name 'init.sh' ! -name '.' ! -name '..' | xargs rm -rf 2> /dev/null
+    find . ! -name 'init.sh' ! -name '.git' ! -name '.' ! -name '..' | xargs rm -rf 2> /dev/null
     echo
     echo "------> Downloading $repo at tag $tag"
     echo
