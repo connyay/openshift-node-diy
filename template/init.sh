@@ -35,7 +35,7 @@ function status_message {
 
 if [[ $repo && $tag ]]; then
     # Clean out directory
-    find . -type f ! -name 'init.sh' | xargs rm
+    find . -type f -not -name 'init.sh' -not -path "./.git/*" | xargs rm
 
     status_message "Downloading $repo at tag $tag"
 
