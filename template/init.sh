@@ -47,7 +47,7 @@ if [[ $repo && $tag ]]; then
 
     if [[ $name ]]; then
         status_message "Setting application name as ${name}"
-        LC_ALL=C find . -type f -exec sed -i "" "s/${pkg_name}/${name}/g" {} ";"
+        find . -type f -not -path "./.git/*" -exec sed -i "" "s/${pkg_name}/${name}/g" {} ";"
     else
         status_message "No name found... using packages name -> ${pkg_name}"
     fi
