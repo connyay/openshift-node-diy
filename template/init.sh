@@ -14,6 +14,10 @@ elif [[ $1 = "-t" || $1 = "--tag" ]]; then
     shift
     tag=$1
     shift
+elif [[ $1 = "-n" || $1 = "--name" ]]; then
+    shift
+    name=$1
+    shift
 elif [[ $1 = "--no-push" ]]; then
     initial_push=0
     shift
@@ -31,12 +35,22 @@ function status_message {
 
 if [[ $repo && $tag ]]; then
     # Clean out directory
-    find . type -f ! -name 'init.sh' | xargs rm
+    find . -type f ! -name 'init.sh' | xargs rm
 
     status_message "Downloading $repo at tag $tag"
 
     # Download release and extract here
     curl -Lk https://github.com/${repo}/archive/${tag}.tar.gz | tar -xz --strip-components=1
+
+    # Extract package name from package.json
+    pkg_name=`node -pe 'JSON.parse(process.argv[1]).name' "$(cat package.json)"`
+
+    if [[ $name ]]; then
+        status_message "Setting application name as ${name}"
+        LC_ALL=C find . -type f -exec sed -i "" "s/${pkg_name}/${name}/g" {} ";"
+    else
+        status_message "No name found... using packages name -> ${pkg_name}"
+    fi
 
     if [ $initial_push -eq 1 ]; then
         status_message "Doing initial push"
