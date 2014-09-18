@@ -33,14 +33,18 @@ function status_message {
     echo
 }
 
-if [[ $repo && $tag ]]; then
+if [[ $repo ]]; then
     # Clean out directory
     find . -type f -not -name 'init.sh' -not -path "./.git/*" | xargs rm
 
-    status_message "Downloading $repo at tag $tag"
+    if [[ $tag ]]; then
+        status_message "Downloading $repo at tag $tag"
+    else
+        status_message "Downloading $repo"
+    fi
 
     # Download release and extract here
-    curl -Lk https://github.com/${repo}/archive/${tag}.tar.gz | tar -xz --strip-components=1
+    curl -Lk https://api.github.com/repos/${repo}/tarball/${tag} | tar -xz --strip-components=1
 
     # Extract package name from package.json
     pkg_name=`node -pe 'JSON.parse(process.argv[1]).name' "$(cat package.json)"`
@@ -65,5 +69,5 @@ if [[ $repo && $tag ]]; then
     rm -- $0
 else
     # WHAT DO YOU WANT FROM ME?
-    echo "Missing repo and/or tag."
+    echo "Missing repo."
 fi
