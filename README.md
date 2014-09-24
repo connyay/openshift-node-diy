@@ -6,8 +6,8 @@
 
 What this cartridge provides out of the box
 ---
-1. **node.js** ([latest stable](https://semver.io/node/stable) currently 0.10.31)
-2. **npm** (latest stable currently 1.4.23)
+1. **node.js** ([latest stable](https://semver.io/node/stable) currently 0.10.32)
+2. **npm** (latest stable currently 1.4.28)
 3. **grunt**
 4. **bower**
 
