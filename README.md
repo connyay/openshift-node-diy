@@ -16,7 +16,7 @@ What this cartridge does out of the box
 *Not much.*
 
 1. Installs node.js (version specified by `$OPENSHIFT_NODEJS_VERSION` and resolved by [semver.io](https://semver.io))
-2. Installs grunt & bower globally (specified by `$OPENSHIFT_NPM_GLOBALS`)
+2. Installs grunt, bower, and forever globally (specified by `$OPENSHIFT_NPM_GLOBALS`)
 3. Allows the user to manually install required dependencies (in a `build` [action_hook](http://openshift.github.io/documentation/oo_user_guide.html#action-hooks))
 4. Runs `npm start` if `package.json` is found in repo directory (log is written to `$OPENSHIFT_NODEJS_LOG_DIR`)
 
@@ -29,8 +29,8 @@ How can I modify the cartridge
 1. Run `rhc env set OPENSHIFT_NODEJS_CUSTOM_VERSION="0.11.13" -a <app name>`
 2. Run `rhc cartridge reload "http://cartreflect-claytondev.rhcloud.com/reflect?github=connyay/openshift-node-diy" -a <app name>`
 
-***Heads up!***  
-The cartridge defaults to installing grunt and bower globally. Bower depends on node >=0.10.0. If you wish to use an older version of node set `$OPENSHIFT_NPM_CUSTOM_GLOBALS` to not include bower.
+***Heads up!***
+The cartridge defaults to installing grunt, bower, and forever globally. Bower depends on node >=0.10.0. If you wish to use an older version of node set `$OPENSHIFT_NPM_CUSTOM_GLOBALS` to not include bower.
 
 ##### Install more npm packages globally
 ###### (using gulp and component as an example)
