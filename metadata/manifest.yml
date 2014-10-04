@@ -2,7 +2,7 @@ Name: node-diy
 Cartridge-Short-Name: NODEDIY
 Display-Name: Node DIY
 Description: "Node.js cartridge that lets you take the wheel"
-Version: '0.10.31'
+Version: '0.10.32'
 Source-Url: https://github.com/connyay/openshift-node-diy.git
 License: "Apache v2"
 License-Url: https://github.com/connyay/openshift-node-diy/blob/master/LICENSE
@@ -51,6 +51,8 @@ Provides:
   - "nodejs"
   - node-diy
 Publishes:
+  get-doc-root:
+    Type: "FILESYSTEM:doc-root"
   publish-http-url:
     Type: "NET_TCP:httpd-proxy-info"
   publish-gear-endpoint:
@@ -59,9 +61,15 @@ Subscribes:
   set-db-connection-info:
     Type: "ENV:NET_TCP:db:connection-info"
     Required: false
+  set-mysql-connection-info:
+    Type: "NET_TCP:db:mysql"
+    Required : false
+  set-postgres-connection-info:
+    Type: "NET_TCP:db:postgres"
+    Required : false
   set-nosql-db-connection-info:
     Type: "ENV:NET_TCP:nosqldb:connection-info"
-    Required: false
+    Required : false
 Scaling:
   Min: 1
   Max: -1
