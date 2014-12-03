@@ -2,7 +2,7 @@
 
 ## Usage
 
-`rhc create-app <app name> "http://cartreflect-claytondev.rhcloud.com/reflect?github=connyay/openshift-node-diy"`
+`rhc create-app <app name> http://tinyurl.com/OpenShiftNodeDIY`
 
 What this cartridge provides out of the box
 ---
